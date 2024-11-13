@@ -11,7 +11,7 @@ struct CircleBackgroundView: View {
     
     @State var Shadeopacity:Double
     @State var Color:Color
-    
+    @State var isAnimating:Bool = false
     var body: some View {
         ZStack{
             Circle()
@@ -22,6 +22,14 @@ struct CircleBackgroundView: View {
                 .frame(width: 260, height: 260, alignment: .center)
             
         }
+        .blur(radius: isAnimating ? 0 : 10 )
+        .scaleEffect(isAnimating ? 1 : 0.5 )
+        .opacity(isAnimating ? 1 : 0)
+        .animation(.easeOut(duration: 1), value: isAnimating)
+        .onAppear(perform: {
+            isAnimating = true
+        })
+        
     }
 }
 

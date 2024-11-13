@@ -12,6 +12,7 @@ struct ContentView: View {
     var body: some View {
         VStack{
             if isOnboardingEnabled {
+                
                 OnboardingView()
             }
             else {

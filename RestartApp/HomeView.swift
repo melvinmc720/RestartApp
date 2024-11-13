@@ -10,6 +10,9 @@ import SwiftUI
 struct HomeView: View {
     
     @AppStorage("onboarding") var isOnboardingEnabled = true
+    @State private var IsAnimating:Bool = false
+    @State var haptic = UINotificationFeedbackGenerator()
+    
     var body: some View {
         VStack(spacing:20) {
             Spacer()
@@ -20,7 +23,10 @@ struct HomeView: View {
                 Image("character-2")
                     .resizable()
                     .scaledToFit()
+                    .animation(.easeOut(duration: 4).repeatForever(), value: IsAnimating)
+                    .offset(x:0 , y: IsAnimating ? 35 : -35)
                     .padding()
+                
             }
             
             
@@ -34,7 +40,12 @@ struct HomeView: View {
             Spacer()
             
             Button {
-                self.isOnboardingEnabled = true
+                withAnimation(.easeOut(duration: 0.5)) {
+                    self.isOnboardingEnabled = true
+                    playSound(File: "success", Extension: "m4a")
+                    haptic.notificationOccurred(.success)
+                }
+                
             } label: {
                 Label("Restart", systemImage: "arrow.triangle.2.circlepath.circle.fill")
                     .imageScale(.large)
@@ -48,6 +59,11 @@ struct HomeView: View {
             Spacer()
 
         }
+        .onAppear(perform: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute:{
+                self.IsAnimating = true
+            })
+        })
         .padding()
     }
 }
